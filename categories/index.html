@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="Hexo, webpack, Nodejs, Reactjs, Vuejs">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2">
+
+
+
+
+
+
+<meta name="description" content="和其它版本控制系统一样，Git能在一些特定的重要动作发生时触发自定义脚本。Git钩子最常见的使用场景包括进行提交规范审核，代码规范审核，进行自动化部署等。在本篇文章中，我会用一个例子详细介绍使用Husky &amp;amp; nodeJs脚本配合使用Git常用钩子。 Git钩子在何方当你用git init初始化一个项目的时候，钩子都被存储在当前项目下.git/hooks子目录中。Git默认会在这个目录中放">
+<meta property="og:type" content="website">
+<meta property="og:title" content="手牵手使用Husky &amp; Nodejs脚本 自定义你的Git钩子">
+<meta property="og:url" content="https://lorde-y.github.io/categories/index.html">
+<meta property="og:site_name" content="点滴记录">
+<meta property="og:description" content="和其它版本控制系统一样，Git能在一些特定的重要动作发生时触发自定义脚本。Git钩子最常见的使用场景包括进行提交规范审核，代码规范审核，进行自动化部署等。在本篇文章中，我会用一个例子详细介绍使用Husky &amp;amp; nodeJs脚本配合使用Git常用钩子。 Git钩子在何方当你用git init初始化一个项目的时候，钩子都被存储在当前项目下.git/hooks子目录中。Git默认会在这个目录中放">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-11-20T09:57:27.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="手牵手使用Husky &amp; Nodejs脚本 自定义你的Git钩子">
+<meta name="twitter:description" content="和其它版本控制系统一样，Git能在一些特定的重要动作发生时触发自定义脚本。Git钩子最常见的使用场景包括进行提交规范审核，代码规范审核，进行自动化部署等。在本篇文章中，我会用一个例子详细介绍使用Husky &amp;amp; nodeJs脚本配合使用Git常用钩子。 Git钩子在何方当你用git init初始化一个项目的时候，钩子都被存储在当前项目下.git/hooks子目录中。Git默认会在这个目录中放">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lorde-y.github.io/categories/">
+
+
+
+
+
+  <title>手牵手使用Husky & Nodejs脚本 自定义你的Git钩子 | 点滴记录</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">点滴记录</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Keep track of growth</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+    
+    
+    <div class="post-block page">
+      <header class="post-header">
+
+	<h2 class="post-title" itemprop="name headline">手牵手使用Husky & Nodejs脚本 自定义你的Git钩子</h2>
+
+
+
+</header>
+
+      
+      
+      
+      <div class="post-body">
+        
+        
+          <p>和其它版本控制系统一样，Git能在一些特定的重要动作发生时触发自定义脚本。Git钩子最常见的使用场景包括进行提交规范审核，代码规范审核，进行自动化部署等。在本篇文章中，我会用一个例子详细介绍使用Husky &amp; nodeJs脚本配合使用Git常用钩子。</p>
+<h2 id="Git钩子在何方"><a href="#Git钩子在何方" class="headerlink" title="Git钩子在何方"></a>Git钩子在何方</h2><p>当你用<code>git init</code>初始化一个项目的时候，钩子都被存储在当前项目下<code>.git/hooks</code>子目录中。Git默认会在这个目录中放置一些示例脚本，这些脚本大多是shell和PERL语言，但是你可以<code>使用任何脚本语言</code>。如果你想启用它们，需要将 <strong>.sample</strong> 这个后缀删除。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">├── applypatch-msg.sample</span><br><span class="line">├── commit-msg.sample</span><br><span class="line">├── post-update.sample</span><br><span class="line">├── pre-applypatch.sample</span><br><span class="line">├── pre-commit.sample</span><br><span class="line">├── pre-push.sample</span><br><span class="line">├── pre-rebase.sample</span><br><span class="line">├── pre-receive.sample</span><br><span class="line">├── prepare-commit-msg.sample</span><br><span class="line">└── update.sample</span><br></pre></td></tr></table></figure></p>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>在多人协作的项目中，代码风格统一、代码提交信息的说明等重要性不言而喻。因此，在本篇文章中，我会介绍如下两个Git钩子：</p>
+<ol>
+<li>pre-commit</li>
+<li>commit-msg</li>
+</ol>
+<h2 id="NodeJs安装"><a href="#NodeJs安装" class="headerlink" title="NodeJs安装"></a>NodeJs安装</h2><p>安装过程就不详细介绍了，可以去<a href="https://nodejs.org/zh-cn/download/" target="_blank" rel="noopener">官网直接下载</a></p>
+<h2 id="husky介绍"><a href="#husky介绍" class="headerlink" title="husky介绍"></a><a href="https://github.com/typicode/husky" target="_blank" rel="noopener">husky</a>介绍</h2><p>husky继承了Git下所有的钩子，在触发钩子的时候，husky可以阻止不合法的commit,push等等。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install husky --save-dev</span><br></pre></td></tr></table></figure></p>
+<h3 id="Eslint"><a href="#Eslint" class="headerlink" title="Eslint"></a>Eslint</h3><ol>
+<li><p>介绍<br><a href="http://eslint.cn/docs/user-guide/configuring" target="_blank" rel="noopener">ESLint</a> 是一个开源的 JavaScript 代码检查工具，由 Nicholas C. Zakas 于2013年6月创建。在小项目或者小团队中，成员间可以拟定一份约定的代码规范并依靠自觉和人工检查去遵守这个规范来达到这个目的。但是随着规模的扩大的新成员的加入，这个问题就不能只靠自觉和人工来解决，我们需要强制和自动化来确保每个成员提交的代码都是符合规范的。</p>
+</li>
+<li><p>全局安装</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g eslint</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="项目搭建"><a href="#项目搭建" class="headerlink" title="项目搭建"></a>项目搭建</h3><p><a href="https://github.com/Lorde-Y/git-hooksDemo" target="_blank" rel="noopener">github地址</a></p>
+<ul>
+<li>新建一个项目，<code>git-hooksDemo</code>, 安装所需依赖,依次执行以下命令。<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 进入目录</span><br><span class="line">cd git-hooksDemo</span><br><span class="line">// 初始化git &amp; package.json</span><br><span class="line">git init </span><br><span class="line">npm init</span><br><span class="line">npm install husky eslint --save-dev</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="项目结构如下"><a href="#项目结构如下" class="headerlink" title="项目结构如下"></a>项目结构如下</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">├── node_modules</span><br><span class="line">├── package.json</span><br><span class="line">├── src</span><br><span class="line">│   ├── assets</span><br><span class="line">│   │   └── images</span><br><span class="line">│   │       ├── brand.jpg</span><br><span class="line">│   │       └── hello.jpg</span><br><span class="line">│   └── js</span><br><span class="line">│       ├── README.md</span><br><span class="line">│       └── message.js</span><br><span class="line">└── tools</span><br><span class="line">    ├── checkcommitmsg.js</span><br><span class="line">    └── checkfilesize.js</span><br></pre></td></tr></table></figure>
+<ul>
+<li>初始化Eslint配置，详细配置可以参考<a href="http://eslint.cn/docs/user-guide/configuring" target="_blank" rel="noopener">Eslint config</a>，eslint初始化时，你可以根据自身项目的需求选择对应的代码风格。目前，我们项目主要用的最多的还是<a href="https://standardjs.com" target="_blank" rel="noopener">Standard标准</a><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">node_modules/.bin/eslint --init</span><br><span class="line"></span><br><span class="line">//如果是全局安装eslint 可以直接键入命令</span><br><span class="line">eslint --init</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="创建pre-commit钩子"><a href="#创建pre-commit钩子" class="headerlink" title="创建pre-commit钩子"></a>创建pre-commit钩子</h3><p>客户端钩子，它会在Git键入提交信息前运行。因此，我们可以利用这个时机来做代码风格检查。<br>查看husky文档 &amp; husky对应<a href="https://git-scm.com/docs/githooks" target="_blank" rel="noopener">Git的钩子</a>，可以清楚看到 <code>precommit对应pre-commit</code><br><strong>编辑pageage.json</strong>, 在scripts中加入如下命令：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  "scripts": &#123;</span><br><span class="line">    "eslint": "eslint src/**/*.js",</span><br><span class="line">    "precommit": "npm run eslint"</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>当你在终端输入<code>git commit -m &quot;xxx&quot;</code>,提交代码的时候，<br>如果代码不符合Eslint规则，则可能会有如下错误提示：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"> 11:22  error  Missing semicolon  semi</span><br><span class="line"></span><br><span class="line">✖ 1 problem (1 error, 0 warnings)</span><br><span class="line">  1 error, 0 warnings potentially fixable with the `--fix` option.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">husky &gt; pre-commit hook failed (add --no-verify to bypass)</span><br></pre></td></tr></table></figure></p>
+<p>当然你可以根据提示 增加参数 <code>git commit -m &quot;xxx&quot; --no-verify</code> 绕过验证，强制提交。</p>
+<p>已经解决了提交前的Eslint代码检查工作。现在，有一个需求，在提交代码之前，<code>检查项目下所有图片文件大小是否符合要求</code>。我们结合上面所提到的，使用NodeJs脚本实现这个需求。<br>在package.json文件中，新增脚本命令如下：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  "scripts": &#123;</span><br><span class="line">    "checkFileSize": "cd tools &amp;&amp; node checkfilesize.js",</span><br><span class="line">    "eslint": "eslint src/**/*.js",</span><br><span class="line">    "precommit": "npm run eslint"</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>终端输入命令<code>git commit -m &quot;xxx&quot;</code>, 运行结果如下：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[13:52:15] Starting check all images size...</span><br><span class="line">[13:52:15] Finished check all images size...</span><br><span class="line"></span><br><span class="line"> /Users/simon/practice/git-hooksDemo/src/assets/images/01f53a5787a1920000018c1b3c94cb.jpg 大小为: 2.79 MB</span><br><span class="line"></span><br><span class="line"> 以上1个文件超过默认大小1MB，请检查！</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">husky &gt; pre-commit hook failed (add --no-verify to bypass)</span><br></pre></td></tr></table></figure></p>
+<p><strong>precommit钩子，会先检查代码合法性，如果通过，再去检查所有图片大小合法性。</strong></p>
+<p>截取部分关键代码：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* 打印警告-超过默认1MB大小文件</span></span><br><span class="line"><span class="comment">* git hooks用于指定在git任务执行的特定时间点自动执行的任务的脚本</span></span><br><span class="line"><span class="comment">* 脚本可以是shell脚本、node脚本等，只要脚本返回有效的退出码（exit code），</span></span><br><span class="line"><span class="comment">* 其中0表示成功，&gt;0表示错误。</span></span><br><span class="line"><span class="comment">* 钩子返回值不是0，那么 git commit 命令就会中止执行。</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">warningAndLogLargeFile</span> (<span class="params">allAssetsArr</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> newArr = checkFileSizeLimit(allAssetsArr);</span><br><span class="line">  <span class="keyword">var</span> flag = <span class="literal">false</span>;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'['</span> + getCurrentDate() + <span class="string">'] Finished check all images size...'</span>);</span><br><span class="line">  <span class="keyword">var</span> overSizeLen = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>, len = newArr.length; i &lt; len; i++) &#123;</span><br><span class="line">    <span class="keyword">var</span> item = newArr[i];</span><br><span class="line">    <span class="keyword">if</span> (item.overLimit) &#123;</span><br><span class="line">      flag = <span class="literal">true</span>;</span><br><span class="line">      overSizeLen = overSizeLen + <span class="number">1</span>;</span><br><span class="line">      <span class="built_in">console</span>.warn(<span class="string">'\n'</span>, item.name, <span class="string">'大小为:'</span>, bytesToSize(item.size));</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (flag) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'\n 以上'</span> + overSizeLen + <span class="string">'个文件超过默认大小1MB，请检查！\n'</span>);</span><br><span class="line">    process.exit(<span class="number">1</span>);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'\n 图片大小符合规格, Good job! \n'</span>);</span><br><span class="line">    process.exit(<span class="number">0</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="创建commit-msg钩子"><a href="#创建commit-msg钩子" class="headerlink" title="创建commit-msg钩子"></a>创建commit-msg钩子</h3><p>客户端钩子，它会根据Git键入提交信息判断 <strong>提交信息是否符合团队规范性</strong>。</p>
+<p>依旧在package.json新增脚本命令：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  "scripts": &#123;</span><br><span class="line">    "checkFileSize": "cd tools &amp;&amp; node checkfilesize.js",</span><br><span class="line">    "eslint": "eslint src/**/*.js",</span><br><span class="line">    "precommit": "npm run eslint",</span><br><span class="line">    "commitmsg": "cd tools &amp;&amp; node checkcommitmsg.js $&#123;GIT_PARAMS&#125;"</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>终端输入命令<code>git commit -m &quot;xxx&quot;</code>, 运行结果如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"> 提交代码信息不符合规范，信息中应包含字符&quot;HELLO-&quot;.</span><br><span class="line"></span><br><span class="line"> 例如：08-28版本HELLO- frist commit.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">husky &gt; commit-msg hook failed (add --no-verify to bypass)</span><br></pre></td></tr></table></figure></p>
+<p>当你在终端键入<code>git commit -m &quot;HELLO- xxx&quot;</code>的时候，就可以通过该检测。</p>
+<p>功能代码如下：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">*    功能： git commit时，自动验证提交信息是否符合规范</span></span><br><span class="line"><span class="comment">* 提交规范： 信息中应包含字符"HELLO-"，同时提交 当前版本的信息。例如："08-18 HELLO-某个功能开发"</span></span><br><span class="line"><span class="comment">* https://github.com/typicode/husky/issues/71</span></span><br><span class="line"><span class="comment">* https://github.com/typicode/husky/issues/</span></span><br><span class="line"><span class="comment">* 主要是读取 .git/COMMIT_EDITMSG 这个文件，文件记录了当前commit之后的信息</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>);</span><br><span class="line"><span class="keyword">var</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> gitPath = path.join(<span class="string">'../'</span>, process.env.GIT_PARAMS);</span><br><span class="line"><span class="keyword">var</span> commitMsg = fs.readFileSync(gitPath, <span class="string">'utf-8'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> pattern = <span class="regexp">/HELLO-/g</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!pattern.test(commitMsg)) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">' 提交代码信息不符合规范，信息中应包含字符"HELLO-".\n'</span>);</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">' 例如：08-28版本HELLO- frist commit.\n'</span>);</span><br><span class="line">  process.exit(<span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line">process.exit(<span class="number">0</span>);</span><br></pre></td></tr></table></figure></p>
+<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>pre-commit &amp; commit-msg 两个钩子的用法已经介绍完了。<br>Git钩子还有很多功能，可以帮助开发者实现更好的功能需求。<br>感谢您的阅读，文章中的DEMO已经放在 <a href="https://github.com/Lorde-Y/git-hooksDemo" target="_blank" rel="noopener">github地址</a>，欢迎提出issue，star是最好的了。2333333</p>
+
+        
+      </div>
+      
+      
+      
+    </div>
+    
+    
+    
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="simon">
+          <p class="site-author-name" itemprop="name">simon</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Lorde-Y" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Git钩子在何方"><span class="nav-number">1.</span> <span class="nav-text">Git钩子在何方</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">2.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NodeJs安装"><span class="nav-number">3.</span> <span class="nav-text">NodeJs安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#husky介绍"><span class="nav-number">4.</span> <span class="nav-text">husky介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Eslint"><span class="nav-number">4.1.</span> <span class="nav-text">Eslint</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#项目搭建"><span class="nav-number">4.2.</span> <span class="nav-text">项目搭建</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#项目结构如下"><span class="nav-number">5.</span> <span class="nav-text">项目结构如下</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建pre-commit钩子"><span class="nav-number">5.1.</span> <span class="nav-text">创建pre-commit钩子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建commit-msg钩子"><span class="nav-number">5.2.</span> <span class="nav-text">创建commit-msg钩子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#最后"><span class="nav-number">5.3.</span> <span class="nav-text">最后</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">simon</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  
+    <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://lorde-y.github.io/categories/index.html';
+          this.page.identifier = 'categories/index.html';
+          this.page.title = '手牵手使用Husky & Nodejs脚本 自定义你的Git钩子';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
