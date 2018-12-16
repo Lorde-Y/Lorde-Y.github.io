@@ -78,7 +78,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css">
 
 
-  <meta name="keywords" content="Hexo, webpack, Nodejs, Reactjs, Vuejs">
+  <meta name="keywords" content="web,前端,travis,">
 
 
 
@@ -94,13 +94,23 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="点滴记录">
-<meta property="og:url" content="https://lorde-y.github.io/index.html">
+<meta name="description" content="本文将以一个示例为参考，写的一个Node爬虫小项目，Koa框架。在用Travis-ci做持续集成的时候，碰到一些问题，以此文做一个总结。本文将详细介绍通过travis-ci，如何将项目部署到自己的腾讯云服务器。 Travis-ci持续集成Travis CI 提供的是持续集成服务（Continuous Integration，简称 CI）。它绑定 Github 上面的项目，只要有新的代码，就会自动抓">
+<meta name="keywords" content="web,前端,travis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用travis-ci持续集成">
+<meta property="og:url" content="https://lorde-y.github.io/2018/12/16/travis-ci/index.html">
 <meta property="og:site_name" content="点滴记录">
+<meta property="og:description" content="本文将以一个示例为参考，写的一个Node爬虫小项目，Koa框架。在用Travis-ci做持续集成的时候，碰到一些问题，以此文做一个总结。本文将详细介绍通过travis-ci，如何将项目部署到自己的腾讯云服务器。 Travis-ci持续集成Travis CI 提供的是持续集成服务（Continuous Integration，简称 CI）。它绑定 Github 上面的项目，只要有新的代码，就会自动抓">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://lorde-y.github.io/images/travis-1.png">
+<meta property="og:image" content="https://lorde-y.github.io/images/travis-2.png">
+<meta property="og:image" content="https://lorde-y.github.io/images/travis-3.png">
+<meta property="og:image" content="https://lorde-y.github.io/images/travis-4.png">
+<meta property="og:updated_time" content="2018-12-16T09:52:20.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="点滴记录">
+<meta name="twitter:title" content="使用travis-ci持续集成">
+<meta name="twitter:description" content="本文将以一个示例为参考，写的一个Node爬虫小项目，Koa框架。在用Travis-ci做持续集成的时候，碰到一些问题，以此文做一个总结。本文将详细介绍通过travis-ci，如何将项目部署到自己的腾讯云服务器。 Travis-ci持续集成Travis CI 提供的是持续集成服务（Continuous Integration，简称 CI）。它绑定 Github 上面的项目，只要有新的代码，就会自动抓">
+<meta name="twitter:image" content="https://lorde-y.github.io/images/travis-1.png">
 
 
 
@@ -129,13 +139,13 @@
 
 
 
-  <link rel="canonical" href="https://lorde-y.github.io/">
+  <link rel="canonical" href="https://lorde-y.github.io/2018/12/16/travis-ci/">
 
 
 
 
 
-  <title>点滴记录</title>
+  <title>使用travis-ci持续集成 | 点滴记录</title>
   
 
 
@@ -160,9 +170,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-   page-home 
- ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
@@ -265,9 +273,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -297,9 +305,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/12/16/travis-ci/" itemprop="url">使用travis-ci持续集成</a></h2>
+          <h2 class="post-title" itemprop="name headline">使用travis-ci持续集成</h2>
         
 
         <div class="post-meta">
@@ -381,9 +387,7 @@
       
 
       
-        
-          
-            <p>本文将以一个示例为参考，写的一个Node爬虫小项目，Koa框架。在用Travis-ci做持续集成的时候，碰到一些问题，以此文做一个总结。本文将详细介绍通过travis-ci，如何将项目部署到自己的腾讯云服务器。</p>
+        <p>本文将以一个示例为参考，写的一个Node爬虫小项目，Koa框架。在用Travis-ci做持续集成的时候，碰到一些问题，以此文做一个总结。本文将详细介绍通过travis-ci，如何将项目部署到自己的腾讯云服务器。</p>
 <h1 id="Travis-ci持续集成"><a href="#Travis-ci持续集成" class="headerlink" title="Travis-ci持续集成"></a>Travis-ci持续集成</h1><p>Travis CI 提供的是持续集成服务（Continuous Integration，简称 CI）。它绑定 Github 上面的项目，只要有新的代码，就会自动抓取。然后，提供一个运行环境，执行测试，完成构建，执行脚本部署到指定服务器。</p>
 <h1 id="Travis-ci账号注册"><a href="#Travis-ci账号注册" class="headerlink" title="Travis-ci账号注册"></a>Travis-ci账号注册</h1><p><a href="https://travis-ci.org" target="_blank" rel="noopener">注册Travis-ci账号</a>，以GitHub账号注册即可。注册完成后，Travis就会同步Github上你的项目。可以勾选项目进行持续集成。如下图：<br><img src="/images/travis-1.png" alt="项目列表"></p>
 <h1 id="理清部署流程"><a href="#理清部署流程" class="headerlink" title="理清部署流程"></a>理清部署流程</h1><p>在一步之前，希望能对travis-ci文档有一定的理解。这样对后续的操作会有比较深的印象。<br>既然是自动部署，那就必须解放双手！我们来理一下自动部署的流程：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">代码提交 -&gt; 通知travis-ci，开始部署(可以跑单元测试脚本等等) -&gt; 登录自己的服务器 -&gt; 服务器自动获取最新代码 -&gt; Node服务reload</span><br></pre></td></tr></table></figure></p>
@@ -405,8 +409,6 @@
 <p>到此，一切大功告成！老铁，现在就提交代码，享受自动部署带来的愉悦吧！</p>
 <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><p><a href="https://github.com/dwyl/learn-travis/blob/master/encrypted-ssh-keys-deployment.md" target="_blank" rel="noopener">encrypted-ssh-keys-deployment</a><br><a href="https://github.com/travis-ci/travis.rb#installation" target="_blank" rel="noopener">travis-cli安装</a></p>
 
-          
-        
       
     </div>
     
@@ -421,312 +423,40 @@
 
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-tags" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://lorde-y.github.io/2018/11/20/categories/git-hooks/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="simon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="点滴记录">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/11/20/categories/git-hooks/" itemprop="url">手牵手使用Husky & Nodejs脚本 自定义你的Git钩子</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-20T17:47:26+08:00">
-                2018-11-20
-              </time>
-            
-
-            
-
-            
-          </span>
-
+        <div class="post-tags">
           
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/git/" itemprop="url" rel="index">
-                    <span itemprop="name">git</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
+            <a href="/tags/web/" rel="tag"># web</a>
           
-
+            <a href="/tags/前端/" rel="tag"># 前端</a>
           
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/11/20/categories/git-hooks/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/11/20/categories/git-hooks/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
+            <a href="/tags/travis/" rel="tag"># travis</a>
           
-
-          
-          
-
-          
-
-          
-
-          
-
         </div>
-      </header>
-    
+      
 
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
+      
       
       
 
       
-        
-          <p>和其它版本控制系统一样，Git能在一些特定的重要动作发生时触发自定义脚本。Git钩子最常见的使用场景包括进行提交规范审核，代码规范审核，进行自动化部署等。在本篇文章中，我会用一个例子详细介绍使用Husky &amp; nodeJs脚本配合使用Git常用钩子。</p>
-<h2 id="Git钩子在何方"><a href="#Git钩子在何方" class="headerlink" title="Git钩子在何方"></a>Git钩子在何方</h2><p>当你用<code>git init</code>初始化一个项目的时候，钩子都被存储在当前项目下<code>.git/hooks</code>子目录中。Git默认会在这个目录中放置一些示例脚本，这些脚本大多是shell和PERL语言，但是你可以<code>使用任何脚本语言</code>。如果你想启用它们，需要将 <strong>.sample</strong> 这个后缀删除。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">├── applypatch-msg.sample</span><br><span class="line">├── commit-msg.sample</span><br><span class="line">├── post-update.sample</span><br><span class="line">├── pre-applypatch.sample</span><br><span class="line">├── pre-commit.sample</span><br><span class="line">├── pre-push.sample</span><br><span class="line">├── pre-rebase.sample</span><br><span class="line">├── pre-receive.sample</span><br><span class="line">├── prepare-commit-msg.sample</span><br><span class="line">└── update.sample</span><br></pre></td></tr></table></figure></p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/11/20/categories/git-hooks/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/20/categories/git-hooks/" rel="next" title="手牵手使用Husky & Nodejs脚本 自定义你的Git钩子">
+                <i class="fa fa-chevron-left"></i> 手牵手使用Husky & Nodejs脚本 自定义你的Git钩子
+              </a>
+            
           </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
 
-    
+          <span class="post-nav-divider"></span>
 
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://lorde-y.github.io/2018/11/20/hello-world/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="simon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="点滴记录">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/11/20/hello-world/" itemprop="url">Hexo 基础</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
+          <div class="post-nav-prev post-nav-item">
             
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-20T16:26:37+08:00">
-                2018-11-20
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/11/20/hello-world/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/11/20/hello-world/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><h3 id="添加分类"><a href="#添加分类" class="headerlink" title="添加分类"></a>添加分类</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new page categories</span><br></pre></td></tr></table></figure>
-<p>成功后会提示：INFO  Created: ~/Documents/blog/source/_posts/categories/index.md</p>
-<p>根据上面的路径，找到index.md这个文件，修改分类<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: My New Post</span><br><span class="line">date: 2018-11-20 18:18:18</span><br><span class="line">categories: </span><br><span class="line">- Hello</span><br><span class="line">tags:</span><br><span class="line">- web</span><br><span class="line">- 前端</span><br><span class="line">---</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -736,10 +466,11 @@
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -747,6 +478,17 @@
 
 
           
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
 
         </div>
         
@@ -767,8 +509,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="simon">
           <p class="site-author-name" itemprop="name">simon</p>
@@ -841,6 +592,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Travis-ci持续集成"><span class="nav-number">1.</span> <span class="nav-text">Travis-ci持续集成</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Travis-ci账号注册"><span class="nav-number">2.</span> <span class="nav-text">Travis-ci账号注册</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#理清部署流程"><span class="nav-number">3.</span> <span class="nav-text">理清部署流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#如何使Travis登录自己的服务器"><span class="nav-number">4.</span> <span class="nav-text">如何使Travis登录自己的服务器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#对deploy-key进行加密"><span class="nav-number">5.</span> <span class="nav-text">对deploy_key进行加密</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#after-success钩子"><span class="nav-number">6.</span> <span class="nav-text">after_success钩子</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文档"><span class="nav-number">7.</span> <span class="nav-text">参考文档</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -961,10 +728,10 @@
 
 
   
-    <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
 <script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
 
-  
+
 
   
 
@@ -982,6 +749,18 @@
       <script id="dsq-count-scr" src="https://.disqus.com/count.js" async></script>
     
 
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://lorde-y.github.io/2018/12/16/travis-ci/';
+          this.page.identifier = '2018/12/16/travis-ci/';
+          this.page.title = '使用travis-ci持续集成';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
     
 
   
